@@ -1,6 +1,7 @@
 @ECHO OFF
 :commitAll
 git add .
-ECHO Staged Files
+git commit -m %2
 EXIT /B 0
-CALL commitAll
+
+if %1=="commitall" CALL commitAll
