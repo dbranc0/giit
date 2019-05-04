@@ -4,6 +4,7 @@ if "%1"=="commitAll" GOTO commitAll
 if "%1"=="pushCurrent" GOTO pushCurrentBranch
 if "%1"=="pushOther" GOTO pushOtherBranch
 if "%1"=="merge" GOTO merge
+if "%1"=="devmerge" GOTO mergeToDev
 
 GOTO :End
 
@@ -30,6 +31,13 @@ GOTO :EOF
 :merge
 SET from=%2
 SET to=%3
+git checkout %to%
+git merge %from%
+GOTO :EOF
+
+:mergeToDev
+SET from=%2
+SET to="dev"
 git checkout %from%
 git merge %to%
 git checkout %to%
