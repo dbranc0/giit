@@ -1,32 +1,39 @@
 @ECHO OFF
+
+if "%1"=="commitAll" GOTO commitAll
+if "%1"=="pushCurrent" GOTO pushCurrentBranch
+if "%1"=="pushOther" GOTO pushOtherBranch
+if "%1"=="merge" GOTO merge
+
+GOTO :End
+
 :commitAll
 git add .
 git commit -m %2
-EXIT /B 0
+GOTO :EOF
 
 :pushCurrentBranch
-SET %branch%="dev"
-SET %remote%="origin"
-git push origin %branch%
-EXIT /B 0
+for /f "delims=" %%i in ('git branch') do SET branch="%%i"
+SET branch=%branch:* ="%
+
+for /f "delims=" %%i in ('git remote') do SET remote="%%i"
+
+git push %remote% %branch%
+GOTO :EOF
 
 :pushOtherBranch
-SET %branch%="dev"
-SET %remote%="origin"
-git checkout %branch%
-git push origin %branch%
-EXIT /B 0
+SET branch=%3
+SET remote=%2
+git push %remote% %branch%
+GOTO :EOF
 
 :merge
-SET %from%=%2
-SET %to%=%3
+SET from=%2
+SET to=%3
 git checkout %from%
 git merge %to%
 git checkout %to%
 git merge %from%
-EXIT /B 0
+GOTO :EOF
 
-if %1=="commitAll" CALL commitAll
-if %1=="pushCurrent" CALL pushCurrentBranch
-if %1=="pushOther" CALL pushOtherBranch
-if %1=="merge" CALL merge
+:End
